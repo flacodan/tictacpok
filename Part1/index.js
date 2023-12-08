@@ -1,21 +1,27 @@
 
 let player = 'X';
-
-function play(evt) {
-    targetSquare = evt.target;
-    targetSquare.innerText = player;
-    player === 'X' ? player = 'O' : player = 'X';
-    let playerHTML = document.querySelector('#current-player');
-    playerHTML.textContent = player;
-    winner();
-}
+let turnsRemaining = 9;
+let winner;
 
 const squares = document.querySelectorAll('.square');
 for(const square of squares) {
     square.addEventListener('click', play)
 }
 
-function winner () {
+function play(evt) {
+    turnsRemaining--;
+    targetSquare = evt.target;
+    targetSquare.innerText = player;
+    player === 'X' ? player = 'O' : player = 'X';
+    let playerHTML = document.querySelector('#current-player');
+    playerHTML.textContent = player;
+    winner = gameDone();
+    if (winner) {
+        alert(`${winner} is the winner!`)
+    }
+}
+
+function gameDone () {
     const lines = [
         // Horizontal lines
         [0, 1, 2],
@@ -34,9 +40,13 @@ function winner () {
         const matchX = line.filter((sq) => squares[sq].innerText === 'X');
         const matchO = line.filter((sq) => squares[sq].innerText === 'O');
         if (matchX.length === 3) {
-            alert('X wins');
+            return 'X';
         } else if (matchO.length === 3) {
-            alert('O wins');
-        }
+            return 'O';
+        } 
+    }
+    if (turnsRemaining < 1){
+        alert("Tie game");
+        return;
     }
 }
